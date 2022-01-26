@@ -15,6 +15,12 @@ class CreateEmployee extends Migration
     {
         Schema::create('employee', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
+            $table->string('nomor_hp');
+            $table->string('email')->unique();
+            $table->integer('current_salary');
+            $table->string('foto_profil');
             $table->timestamps();
         });
     }
