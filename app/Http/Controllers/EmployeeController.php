@@ -22,7 +22,8 @@ class EmployeeController extends Controller
     public function GetAll()
     {
         $data = Employee::all();
-        return response()->json(['message' => 'success', 'data' => $data], 200);
+        $datas = ['data' => $data];
+        return response()->json($datas, 200);
     }
     /**
      * Show the form for creating a new resource.

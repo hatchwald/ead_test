@@ -1,7 +1,7 @@
 @extends('layouts.layouts')
 @section('content')
 <h3 class="text-center">Data Employee</h3>
-<div class="float-end">
+<div class="pb-4">
     <a href="#" id="btn_add" class="btn btn-primary">Add New Data</a>
 </div>
 <table class="table" id="table_employee">
@@ -18,18 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($data as $value)
-        <tr>
-            <td>{{$loop->iteration}}</td>
-            <td>{{$value->nama}}</td>
-            <td>{{$value->jenis_kelamin}}</td>
-            <td>{{$value->nomor_hp}}</td>
-            <td>{{$value->email}}</td>
-            <td>{{$value->current_salary}}</td>
-            <td><img src="./{{$value->foto_profil}}" class="img-tables" alt=""></td>
-            <td><a href="#" class="btn btn-warning">Update</a> <a href="#" class="btn btn-danger">Delete</a></td>
-        </tr>
-        @endforeach
+
     </tbody>
 </table>
 <div id="testings"></div>

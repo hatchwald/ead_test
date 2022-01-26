@@ -1,3 +1,9 @@
+// import $ from 'jquery'
+// import '@popperjs/core'
+// import 'bootstrap'
+// import 'datatables.net-bs5'
+// import $, { ajax } from 'jquery';
+// var dt = require('datatables.net')();
 $(function () {
 
     $.ajax({
@@ -9,6 +15,36 @@ $(function () {
         console.log(err);
     })
 
+    const dt_table_employees = $("#table_employee").DataTable({
+        "ajax": '/data-employee',
+        "columns": [
+            {
+                data: null,
+                render: (data, type, row, meta) => {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { data: 'nama' },
+            { data: 'jenis_kelamin' },
+            { data: 'nomor_hp' },
+            { data: 'email' },
+            { data: 'current_salary' },
+            {
+                data: 'foto_profil',
+                sortable: false,
+                render: (data, type, row) => {
+                    return `<img src="./${data}" class="img-tables" alt="">`
+                }
+            },
+            {
+                data: null,
+                sortable: false,
+                render: (data, type, row) => {
+                    return `<a href="#" class="btn btn-warning">Update</a> <a href="#" class="btn btn-danger">Delete</a>`;
+                }
+            }
+        ]
+    })
     $("#btn_add").on("click", function () {
         $("#form_employee fieldset").prop("disabled", false)
         $("#submit_btn").prop("disabled", false)
@@ -36,13 +72,7 @@ $(function () {
             processData: false
 
         }).done(data => {
-            const length_table = $("#table_employee tbody tr").length
-            console.log(data);
-            //     $("#table_employee tbody").append(`<tr>
-            //     <th scope="row">${length_table + 1}</th>
-            //     <td>${datas[0].value}</td>
-            //     <td>${datas[1].value}</td>
-            // </tr>`)
+            dt_table_employees.ajax.reload()
             $("#toast_notif .toast-body").html("Success Created data")
             $("#toast_notif").toast("show")
 
