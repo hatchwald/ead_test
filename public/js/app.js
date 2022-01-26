@@ -2110,14 +2110,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // import $, { ajax } from 'jquery';
 // var dt = require('datatables.net')();
 $(function () {
-  $.ajax({
-    url: '/data-employee',
-    method: 'GET'
-  }).done(function (data) {
-    console.log(data);
-  }).fail(function (err) {
-    console.log(err);
-  });
   var dt_table_employees = $("#table_employee").DataTable({
     "ajax": '/data-employee',
     "columns": [{
@@ -2145,7 +2137,7 @@ $(function () {
       data: null,
       sortable: false,
       render: function render(data, type, row) {
-        return "<a href=\"#\" class=\"btn btn-warning\">Update</a> <a href=\"#\" class=\"btn btn-danger\">Delete</a>";
+        return "<a href=\"#\" class=\"btn btn-warning\" data-id=\"".concat(row.id, "\">Update</a> <a href=\"#\" class=\"btn btn-danger\" data-id=\"").concat(data.id, "\">Delete</a>");
       }
     }]
   });
@@ -2187,6 +2179,99 @@ $(function () {
       });
       console.log(err);
     });
+  });
+  $("#form_employee_update").on("submit", function (e) {
+    e.preventDefault();
+    var data = $("#form_employee_update").serializeArray();
+    var foto = $("#foto_profil")[0].files[0];
+    var form_table = document.getElementById("form_employee_update");
+    var form_data = new FormData(form_table);
+    $("#submit_btn").prop('disabled', true);
+    $("#form_employee_update fieldset").prop("disabled", true);
+    $("#modal_dialogue_update").modal("hide");
+    var id_employee = $("#id_employee").val();
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: form_data,
+      url: "/employee/".concat(id_employee),
+      method: "POST",
+      contentType: false,
+      processData: false
+    }).done(function (data) {
+      dt_table_employees.ajax.reload();
+      $("#toast_notif .toast-body").html("Success update data");
+      $("#toast_notif").toast("show");
+    }).fail(function (err) {
+      $("#toast_notif .toast-body").html("An Error was happen , check log");
+      $("#toast_notif").toast("show");
+      $("#toast_notif .btn-close").on("click", function () {
+        $("#form_employee fieldset").prop("disabled", false);
+        $("#submit_btn").prop("disabled", false);
+        $("#modal_dialogue").modal("show");
+      });
+      console.log(err);
+    });
+  });
+  $("#form_employee_delete").on("submit", function (e) {
+    e.preventDefault();
+    var data = $("#form_employee_delete").serializeArray();
+    var foto = $("#foto_profil")[0].files[0];
+    var form_table = document.getElementById("form_employee_delete");
+    var form_data = new FormData(form_table);
+    $("#submit_btn_delete").prop('disabled', true);
+    $("#modal_dialogue_delete").modal("hide");
+    var id_employee = $("#id_employee_delete").val();
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: form_data,
+      url: "/employee/".concat(id_employee),
+      method: "POST",
+      contentType: false,
+      processData: false
+    }).done(function (data) {
+      dt_table_employees.ajax.reload();
+      $("#toast_notif .toast-body").html("Success delete data");
+      $("#toast_notif").toast("show");
+    }).fail(function (err) {
+      $("#toast_notif .toast-body").html("An Error was happen , check log");
+      $("#toast_notif").toast("show"); // $("#toast_notif .btn-close").on("click", function () {
+      //     $("#form_employee fieldset").prop("disabled", false)
+      //     $("#submit_btn").prop("disabled", false)
+      //     $("#modal_dialogue").modal("show")
+      // })
+
+      console.log(err);
+    });
+  });
+  $("#table_employee").on("click", ".btn-warning", function () {
+    var curr = $(this).closest("tr");
+    var nama = curr.find("td:eq(1)").text();
+    $("#modal_dialogue_update #nama").val(nama);
+    var jk = curr.find("td:eq(2)").text();
+    $("#modal_dialogue_update #jenis_kelamin").val(jk);
+    var no_hp = curr.find("td:eq(3)").text();
+    $("#modal_dialogue_update #nomor_hp").val(no_hp);
+    var email = curr.find("td:eq(4)").text();
+    $("#modal_dialogue_update #email").val(email);
+    var salary = curr.find("td:eq(5)").text();
+    $("#modal_dialogue_update #current_salary").val(salary);
+    $("#submit_btn").prop("disabled", false);
+    $("#modal_dialogue_update").modal("show");
+    var data_id = $(this).data("id");
+    $("#id_employee").val(data_id);
+  });
+  $("#table_employee").on("click", ".btn-danger", function () {
+    var curr = $(this).closest("tr");
+    var nama = curr.find("td:eq(1)").text();
+    $("#form_employee_delete #employee_name").html(nama);
+    var data_id = $(this).data("id");
+    $("#form_employee_delete #id_employee_delete").val(data_id);
+    $("#submit_btn_delete").prop("disabled", false);
+    $("#modal_dialogue_delete").modal("show");
   });
 });
 

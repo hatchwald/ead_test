@@ -44,7 +44,6 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         try {
-            //code...
             $validator = $request->validate([
                 'foto_profil' => 'required|image|max:1999',
                 'nama' => 'required',
@@ -122,7 +121,52 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $validator = $request->validate([
+                'foto_profil' => 'required|image|max:1999',
+                'nama' => 'required',
+                'jenis_kelamin' => 'required',
+                'nomor_hp' => 'required|integer',
+                'current_salary' => 'required|integer',
+            ]);
+
+            $employee = Employee::find($id);
+            $prev_img = "./" . $employee->foto_profil;
+            if (file_exists($prev_img)) {
+                unlink($prev_img);
+            }
+
+            $original_filename = $request->file('foto_profil')->getClientOriginalName();
+            $original_filename_arr = explode('.', $original_filename);
+            $file_ext = end($original_filename_arr);
+            $destination_path = './upload_foto_profil/';
+            $image = 'U-' . time() . '.' . $file_ext;
+
+            if ($request->file('foto_profil')->move($destination_path, $image)) {
+                $image = 'upload_foto_profil/' . $image;
+                $datas = ['message' => 'success', 'data' => $image];
+            } else {
+                $response = ['message' => 'Error at upload image', 'original_code' => 500];
+                return response()->json($response, 500);
+            }
+
+            $employee->foto_profil = $image;
+            $employee->nama = $request->nama;
+            $employee->jenis_kelamin = $request->jenis_kelamin;
+            $employee->nomor_hp = $request->nomor_hp;
+            $employee->current_salary - $request->current_salary;
+            $employee->save();
+
+            return response()->json(['message' => 'success updated data', 'original_code' => 200, 'data' => $employee], 200);
+        } catch (\Throwable $th) {
+            if (isset($image)) {
+                $dir_img = "./" . $image;
+                if (file_exists($dir_img)) {
+                    unlink($dir_img);
+                }
+            }
+            return response()->json(['message' => $th->getMessage(), 'original_code' => $th->getCode()], 500);
+        }
     }
 
     /**
@@ -133,6 +177,16 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $employee = Employee::find($id);
+            $prev_img = "./" . $employee->foto_profil;
+            if (file_exists($prev_img)) {
+                unlink($prev_img);
+            }
+            $employee->delete();
+            return response()->json(['message' => 'success delete data', 'original_code' => 200, 'data' => $employee], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage(), 'original_code' => $th->getCode()], 500);
+        }
     }
 }
