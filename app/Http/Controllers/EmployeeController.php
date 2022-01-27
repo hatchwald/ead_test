@@ -15,8 +15,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $data = Employee::all();
-        return view('employee', ['data' => $data]);
+        return view('employee');
     }
 
     public function GetAll()
@@ -188,5 +187,11 @@ class EmployeeController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage(), 'original_code' => $th->getCode()], 500);
         }
+    }
+
+    public function DataExport()
+    {
+        $data = Employee::all();
+        return view('export-employee', ['data' => $data]);
     }
 }

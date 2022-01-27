@@ -1,4 +1,5 @@
 @extends('layouts.layouts')
+@section('title','Employee Page')
 @section('content')
 <h3 class="text-center">Data Employee</h3>
 <div class="pb-4">

@@ -19,3 +19,4 @@ Route::get('/', function () {
 
 Route::resource('/employee', EmployeeController::class);
 Route::get('/data-employee', [EmployeeController::class, 'GetAll']);
+Route::get('/export-employee', [EmployeeController::class, 'DataExport']);
