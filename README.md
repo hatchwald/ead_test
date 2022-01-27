@@ -7,6 +7,16 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Step To use this project
+1. install composer depedencies with `composer install`
+2. install npm package with `npm install`
+3. prepare the database and set to `.env`
+4. generate key with `php artisan key:generate`
+5. run migrate with `php artisan migrate`
+6. run webpack with `npm run dev` or `npm run prod`
+7. serve the project with `php artisan serve` and the web will default serve on `http://localhost:8000`
+
+made by love by [Hatchwald](https://github.com/hatchwald)
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

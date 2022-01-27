@@ -4,6 +4,7 @@
 <h3 class="text-center">Data Employee</h3>
 <div class="pb-4">
     <a href="#" id="btn_add" class="btn btn-primary">Add New Data</a>
+    <a href="/export-employee" class="btn btn-secondary">Export data To Word</a>
 </div>
 <table class="table" id="table_employee">
     <thead>
